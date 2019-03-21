@@ -24,9 +24,10 @@
 
 <script>
 import {mapGetters,mapActions} from 'vuex'
+import Cookies from 'universal-cookie'
 
 export default {
-  asyncData([redirect,store]) {
+  asyncData({redirect,store}) {
     if(store.getters['user']){
       redirect('/posts/')
     }
@@ -40,10 +41,12 @@ export default {
   computed: {
     buttonText() {
       return this.isCreateMode ? 'new register' : 'login'
-    }
+    },
+    ...mapGetters(['user'])
   },
   methods: {
     async handleClickSubmit(){
+      const cookies = new Cookies()
       if(this.isCreateMode) {
         try {
           await this.register({...this.formData})
@@ -54,6 +57,7 @@ export default {
             position: 'bottom-right',
             duration: 1000,
           })
+          cookies.set('user',JSON.stringify(this.user))
           this.$router.push('/posts/')
         } catch(e) {
           this.$notify.error({
@@ -69,10 +73,11 @@ export default {
           this.$notify({
             type: 'success',
             title: 'u logined',
-            message: 'u logined as ${this.formData.id}',
+            message: `u logined as ${this.formData.id}`,
             position: 'bottom-right',
             duration: 1000,
           })
+          cookies.set('user',JSON.stringify(this.user))
           this.$router.push('/posts/')
         } catch(e) {
           this.$notify.error({
