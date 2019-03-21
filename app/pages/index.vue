@@ -53,7 +53,7 @@ export default {
           this.$notify({
             type: 'success',
             title: 'making ur account is success!',
-            message: '${this.formDataid} is ur registered account',
+            message: `${this.formData.id} is ur registered account`,
             position: 'bottom-right',
             duration: 1000,
           })
